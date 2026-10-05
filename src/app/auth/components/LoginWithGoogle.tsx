@@ -2,49 +2,53 @@
 
 import { Button } from "@/components/ui/button";
 import { IconBrandGoogle, IconLoader3 } from "@tabler/icons-react";
-import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { toast } from "sonner";
+import { createClient } from "@/lib/supabase/client";
 
 export default function LoginWithGoogle() {
-  const [loading, setLoading] = useState(false);
-  const router = useRouter();
+	const [loading, setLoading] = useState(false);
 
-  const handleGoogleLogin = async () => {
-    try {
-      setLoading(true);
+	const handleGoogleLogin = async () => {
+		try {
+			setLoading(true);
+			const client = createClient();
+			const { error } = await client.auth.signInWithOAuth({
+				provider: "google",
+				options: {
+					redirectTo: `${window.location.origin}`,
+				},
+			});
+			if (error) {
+				toast.error(error.message || "Failed to sign in with Google");
+				setLoading(false);
+			}
+		} catch {
+			toast.error("An unexpected error occurred");
+			setLoading(false);
+		}
+	};
 
-      router.push(`${process.env.NEXT_PUBLIC_API_BASE_URL}/auth/v1/google?redirect=${window.location.origin}`);
-
-      // The user will be redirected to Google's OAuth page
-      // No need to setLoading(false) as the page will redirect
-    } catch (error) {
-      console.error("Unexpected error during Google login:", error);
-      toast.error("An unexpected error occurred. Please try again.");
-      setLoading(false);
-    }
-  };
-
-  return (
-    <Button
-      type="button"
-      variant="default"
-      onClick={handleGoogleLogin}
-      disabled={loading}
-      className="w-full relative group cursor-pointer"
-      size="lg"
-    >
-      {loading ? (
-        <div className="flex items-center gap-2">
-          <IconLoader3 className="h-5 w-5 animate-spin" />
-          <span>Connecting...</span>
-        </div>
-      ) : (
-        <div className="flex items-center justify-center gap-3">
-          <IconBrandGoogle className="h-5 w-5 transition-transform group-hover:scale-110" />
-          <span className="font-semibold">Continue with Google</span>
-        </div>
-      )}
-    </Button>
-  );
+	return (
+		<Button
+			type="button"
+			variant="default"
+			onClick={handleGoogleLogin}
+			disabled={loading}
+			className="w-full relative group cursor-pointer"
+			size="lg"
+		>
+			{loading ? (
+				<div className="flex items-center gap-2">
+					<IconLoader3 className="h-5 w-5 animate-spin" />
+					<span>Connecting...</span>
+				</div>
+			) : (
+				<div className="flex items-center justify-center gap-3">
+					<IconBrandGoogle className="h-5 w-5 transition-transform group-hover:scale-110" />
+					<span className="font-semibold">Continue with Google</span>
+				</div>
+			)}
+		</Button>
+	);
 }
