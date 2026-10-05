@@ -5,228 +5,228 @@
 @custom-variant dark (&:is(.dark *));
 
 @theme inline {
-    /* Typography */
-    --font-sans: var(--font-mona-sans);
-    --font-heading: var(--font-mona-sans);
-    --font-mono: var(--font-geist-mono);
+  /* Typography */
+  --font-sans: var(--font-mona-sans);
+  --font-heading: var(--font-mona-sans);
+  --font-mono: var(--font-geist-mono);
 
-    /* Core */
-    --color-background: var(--background);
-    --color-foreground: var(--foreground);
+  /* Core */
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
 
-    /* Surfaces */
-    --color-card: var(--card);
-    --color-card-foreground: var(--card-foreground);
-    --color-popover: var(--popover);
-    --color-popover-foreground: var(--popover-foreground);
+  /* Surfaces */
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
 
-    /* Brand */
-    --color-primary: var(--primary);
-    --color-primary-foreground: var(--primary-foreground);
-    --color-accent: var(--accent);
-    --color-accent-foreground: var(--accent-foreground);
+  /* Brand */
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
 
-    /* Supporting */
-    --color-secondary: var(--secondary);
-    --color-secondary-foreground: var(--secondary-foreground);
-    --color-muted: var(--muted);
-    --color-muted-foreground: var(--muted-foreground);
+  /* Supporting */
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
 
-    /* UI */
-    --color-border: var(--border);
-    --color-input: var(--input);
-    --color-ring: var(--ring);
-    --color-destructive: var(--destructive);
+  /* UI */
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+  --color-destructive: var(--destructive);
 
-    /* Charts */
-    --color-chart-1: var(--chart-1);
-    --color-chart-2: var(--chart-2);
-    --color-chart-3: var(--chart-3);
-    --color-chart-4: var(--chart-4);
-    --color-chart-5: var(--chart-5);
+  /* Charts */
+  --color-chart-1: var(--chart-1);
+  --color-chart-2: var(--chart-2);
+  --color-chart-3: var(--chart-3);
+  --color-chart-4: var(--chart-4);
+  --color-chart-5: var(--chart-5);
 
-    /* Sidebar */
-    --color-sidebar: var(--sidebar);
-    --color-sidebar-foreground: var(--sidebar-foreground);
-    --color-sidebar-primary: var(--sidebar-primary);
-    --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
-    --color-sidebar-accent: var(--sidebar-accent);
-    --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
-    --color-sidebar-border: var(--sidebar-border);
-    --color-sidebar-ring: var(--sidebar-ring);
+  /* Sidebar */
+  --color-sidebar: var(--sidebar);
+  --color-sidebar-foreground: var(--sidebar-foreground);
+  --color-sidebar-primary: var(--sidebar-primary);
+  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+  --color-sidebar-accent: var(--sidebar-accent);
+  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+  --color-sidebar-border: var(--sidebar-border);
+  --color-sidebar-ring: var(--sidebar-ring);
 
-    /* Radius */
-    --radius-sm: calc(var(--radius) * 0.6);
-    --radius-md: calc(var(--radius) * 0.8);
-    --radius-lg: var(--radius);
-    --radius-xl: calc(var(--radius) * 1.4);
-    --radius-2xl: calc(var(--radius) * 1.8);
-    --radius-3xl: calc(var(--radius) * 2.2);
-    --radius-4xl: calc(var(--radius) * 2.6);
+  /* Radius */
+  --radius-sm: calc(var(--radius) * 0.6);
+  --radius-md: calc(var(--radius) * 0.8);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) * 1.4);
+  --radius-2xl: calc(var(--radius) * 1.8);
+  --radius-3xl: calc(var(--radius) * 2.2);
+  --radius-4xl: calc(var(--radius) * 2.6);
 }
 
 :root {
-    /* ========================================
+  /* ========================================
        LOOP BRAND
        ======================================== */
 
-    --loop-blue: #336699;
-    --loop-yellow: #ffcc66;
-    --loop-navy: #003366;
-    --loop-white: #ffffff;
+  --loop-blue: #336699;
+  --loop-yellow: #ffcc66;
+  --loop-navy: #003366;
+  --loop-white: #ffffff;
 
-    /* ========================================
+  /* ========================================
        LIGHT THEME
        ======================================== */
 
-    --background: #ffffff;
-    --foreground: #003366;
+  --background: #ffffff;
+  --foreground: #003366;
 
-    /* Cards / surfaces */
-    --card: #ffffff;
-    --card-foreground: #003366;
+  /* Cards / surfaces */
+  --card: #ffffff;
+  --card-foreground: #003366;
 
-    --popover: #ffffff;
-    --popover-foreground: #003366;
+  --popover: #ffffff;
+  --popover-foreground: #003366;
 
-    /* Primary action */
-    --primary: #336699;
-    --primary-foreground: #ffffff;
+  /* Primary action */
+  --primary: #336699;
+  --primary-foreground: #ffffff;
 
-    /* Secondary */
-    --secondary: #edf3f8;
-    --secondary-foreground: #003366;
+  /* Secondary */
+  --secondary: #edf3f8;
+  --secondary-foreground: #003366;
 
-    /* Muted */
-    --muted: #f5f8fb;
-    --muted-foreground: #60758a;
+  /* Muted */
+  --muted: #f5f8fb;
+  --muted-foreground: #60758a;
 
-    /* Accent */
-    --accent: #ffcc66;
-    --accent-foreground: #003366;
+  /* Accent */
+  --accent: #ffcc66;
+  --accent-foreground: #003366;
 
-    /* Destructive */
-    --destructive: #d64545;
+  /* Destructive */
+  --destructive: #d64545;
 
-    /* Borders / inputs */
-    --border: #d9e4ed;
-    --input: #d9e4ed;
-    --ring: #336699;
+  /* Borders / inputs */
+  --border: #d9e4ed;
+  --input: #d9e4ed;
+  --ring: #336699;
 
-    /* ========================================
+  /* ========================================
        CHARTS
        ======================================== */
 
-    --chart-1: #336699;
-    --chart-2: #ffcc66;
-    --chart-3: #003366;
-    --chart-4: #6699cc;
-    --chart-5: #cc9933;
+  --chart-1: #336699;
+  --chart-2: #ffcc66;
+  --chart-3: #003366;
+  --chart-4: #6699cc;
+  --chart-5: #cc9933;
 
-    /* ========================================
+  /* ========================================
        SIDEBAR
        ======================================== */
 
-    --sidebar: #f7f9fc;
-    --sidebar-foreground: #003366;
+  --sidebar: #f7f9fc;
+  --sidebar-foreground: #003366;
 
-    --sidebar-primary: #336699;
-    --sidebar-primary-foreground: #ffffff;
+  --sidebar-primary: #336699;
+  --sidebar-primary-foreground: #ffffff;
 
-    --sidebar-accent: #ffcc66;
-    --sidebar-accent-foreground: #003366;
+  --sidebar-accent: #ffcc66;
+  --sidebar-accent-foreground: #003366;
 
-    --sidebar-border: #d9e4ed;
-    --sidebar-ring: #336699;
+  --sidebar-border: #d9e4ed;
+  --sidebar-ring: #336699;
 
-    /* ========================================
+  /* ========================================
        RADIUS
        ======================================== */
 
-    --radius: 0.5rem;
+  --radius: 0.5rem;
 }
 
 .dark {
-    /* ========================================
+  /* ========================================
        LOOP DARK THEME
        ======================================== */
 
-    --background: #071a2d;
-    --foreground: #ffffff;
+  --background: #071a2d;
+  --foreground: #ffffff;
 
-    /* Cards / surfaces */
-    --card: #0b2540;
-    --card-foreground: #ffffff;
+  /* Cards / surfaces */
+  --card: #0b2540;
+  --card-foreground: #ffffff;
 
-    --popover: #0b2540;
-    --popover-foreground: #ffffff;
+  --popover: #0b2540;
+  --popover-foreground: #ffffff;
 
-    /* Primary */
-    --primary: #6699cc;
-    --primary-foreground: #ffffff;
+  /* Primary */
+  --primary: #6699cc;
+  --primary-foreground: #ffffff;
 
-    /* Secondary */
-    --secondary: #123451;
-    --secondary-foreground: #ffffff;
+  /* Secondary */
+  --secondary: #123451;
+  --secondary-foreground: #ffffff;
 
-    /* Muted */
-    --muted: #123451;
-    --muted-foreground: #9eb4c9;
+  /* Muted */
+  --muted: #123451;
+  --muted-foreground: #9eb4c9;
 
-    /* Accent */
-    --accent: #ffcc66;
-    --accent-foreground: #003366;
+  /* Accent */
+  --accent: #ffcc66;
+  --accent-foreground: #003366;
 
-    /* Destructive */
-    --destructive: #ef6666;
+  /* Destructive */
+  --destructive: #ef6666;
 
-    /* Borders / inputs */
-    --border: #23415d;
-    --input: #23415d;
-    --ring: #6699cc;
+  /* Borders / inputs */
+  --border: #23415d;
+  --input: #23415d;
+  --ring: #6699cc;
 
-    /* ========================================
+  /* ========================================
        CHARTS
        ======================================== */
 
-    --chart-1: #6699cc;
-    --chart-2: #ffcc66;
-    --chart-3: #ffffff;
-    --chart-4: #336699;
-    --chart-5: #cc9933;
+  --chart-1: #6699cc;
+  --chart-2: #ffcc66;
+  --chart-3: #ffffff;
+  --chart-4: #336699;
+  --chart-5: #cc9933;
 
-    /* ========================================
+  /* ========================================
        SIDEBAR
        ======================================== */
 
-    --sidebar: #06172a;
-    --sidebar-foreground: #ffffff;
+  --sidebar: #06172a;
+  --sidebar-foreground: #ffffff;
 
-    --sidebar-primary: #6699cc;
-    --sidebar-primary-foreground: #ffffff;
+  --sidebar-primary: #6699cc;
+  --sidebar-primary-foreground: #ffffff;
 
-    --sidebar-accent: #ffcc66;
-    --sidebar-accent-foreground: #003366;
+  --sidebar-accent: #ffcc66;
+  --sidebar-accent-foreground: #003366;
 
-    --sidebar-border: #23415d;
-    --sidebar-ring: #6699cc;
+  --sidebar-border: #23415d;
+  --sidebar-ring: #6699cc;
 }
 
 @layer base {
-    * {
-        @apply border-border outline-ring/50;
-    }
+  * {
+    @apply border-border outline-ring/50;
+  }
 
-    body {
-        @apply bg-background text-foreground;
-    }
+  body {
+    @apply bg-background text-foreground;
+  }
 
-    button:not(:disabled),
-    [role="button"]:not(:disabled) {
-        cursor: pointer;
-    }
+  button:not(:disabled),
+  [role="button"]:not(:disabled) {
+    cursor: pointer;
+  }
 
-    html {
-        @apply font-sans;
-    }
+  html {
+    @apply font-sans;
+  }
 }
