@@ -1,11 +1,11 @@
+// biome-ignore-all lint/a11y/noLabelWithoutControl: this is a label without a control
 "use client";
 
 import type * as React from "react";
-import { cn } from "@/lib/utils";
+import { cn } from "cn";
 
 function Label({ className, ...props }: React.ComponentProps<"label">) {
   return (
-    // biome-ignore lint/a11y/noLabelWithoutControl: primitive; consumers pass htmlFor
     <label
       data-slot="label"
       className={cn(

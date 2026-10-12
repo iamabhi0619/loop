@@ -1,5 +1,5 @@
 import type * as React from "react";
-import { cn } from "@/lib/utils";
+import { cn } from "cn";
 
 function Card({
   className,
@@ -90,10 +90,10 @@ function CardFooter({ className, ...props }: React.ComponentProps<"div">) {
 
 export {
   Card,
-  CardAction,
-  CardContent,
-  CardDescription,
-  CardFooter,
   CardHeader,
+  CardFooter,
   CardTitle,
+  CardAction,
+  CardDescription,
+  CardContent,
 };

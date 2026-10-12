@@ -1,0 +1,433 @@
+// ============================================================
+// LOOP — E2EE-READY CHAT DATABASE
+// DBML for dbdiagram.io
+// ============================================================
+
+// ============================================================
+// 1. USERS
+// ============================================================
+
+Table users {
+  id uuid [pk, not null, note: 'Same UUID as Supabase auth.users.id']
+  username varchar(50) [not null, unique]
+  name varchar(100)
+  avatar_url text
+  status varchar(20) [default: 'offline', note: 'online / offline / away']
+  last_seen_at timestamptz
+  created_at timestamptz [not null, default: `now()`]
+  updated_at timestamptz [not null, default: `now()`]
+
+  Note: 'One account can have multiple trusted devices.'
+}
+
+
+// ============================================================
+// 2. DEVICES
+// ============================================================
+
+Table devices {
+  id uuid [pk, not null, default: `gen_random_uuid()`]
+  user_id uuid [not null]
+
+  device_name varchar(100)
+  device_type varchar(30) [note: 'browser / desktop / mobile']
+  browser varchar(50)
+  os varchar(50)
+
+  public_key text [not null, note: 'Public identity key. Private key NEVER reaches server.']
+
+  fingerprint text [unique, note: 'Optional device identification/fingerprint']
+
+  is_trusted boolean [not null, default: false]
+  is_active boolean [not null, default: true]
+
+  last_seen_at timestamptz
+  created_at timestamptz [not null, default: `now()`]
+  revoked_at timestamptz
+
+  Note: 'Every browser/device gets its own cryptographic identity.'
+}
+
+
+// ============================================================
+// 3. DEVICE KEY BUNDLES
+// ============================================================
+
+Table device_keys {
+  id uuid [pk, not null, default: `gen_random_uuid()`]
+  device_id uuid [not null]
+
+  key_type varchar(30) [not null, note: 'identity / prekey / signed_prekey']
+
+  public_key text [not null]
+
+  key_version integer [not null, default: 1]
+
+  signature text
+  is_active boolean [not null, default: true]
+
+  created_at timestamptz [not null, default: `now()`]
+  expires_at timestamptz
+
+  Note: 'Public keys only. Never store private encryption keys here.'
+}
+
+
+// ============================================================
+// 4. DEVICE TRUST / LINKING
+// ============================================================
+
+Table device_links {
+  id uuid [pk, not null, default: `gen_random_uuid()`]
+
+  user_id uuid [not null]
+  source_device_id uuid [not null]
+  target_device_id uuid [not null]
+
+  verification_method varchar(30) [
+    not null,
+    note: 'qr / recovery_key / existing_device'
+  ]
+
+  verified_at timestamptz
+  created_at timestamptz [not null, default: `now()`]
+
+  Note: 'Tracks when an existing trusted device authorizes a new device.'
+}
+
+
+// ============================================================
+// 5. CHATS
+// ============================================================
+
+Table chats {
+  id uuid [pk, not null, default: `gen_random_uuid()`]
+
+  is_group boolean [not null, default: false]
+
+  chat_name varchar(150)
+  chat_icon text
+
+  created_by uuid [not null]
+
+  created_at timestamptz [not null, default: `now()`]
+  updated_at timestamptz [not null, default: `now()`]
+}
+
+
+// ============================================================
+// 6. CHAT PARTICIPANTS
+// ============================================================
+
+Table chat_participants {
+  id uuid [pk, not null, default: `gen_random_uuid()`]
+
+  chat_id uuid [not null]
+  user_id uuid [not null]
+
+  role varchar(20) [not null, default: 'member']
+
+  pinned boolean [not null, default: false]
+  muted boolean [not null, default: false]
+
+  joined_at timestamptz [not null, default: `now()`]
+  left_at timestamptz
+
+  unread_count integer [not null, default: 0]
+
+  Note: 'User-specific chat settings belong here.'
+
+  Indexes {
+    (chat_id, user_id) [unique]
+  }
+}
+
+
+// ============================================================
+// 7. CHAT DEVICE MEMBERS
+// ============================================================
+
+Table chat_devices {
+  id uuid [pk, not null, default: `gen_random_uuid()`]
+
+  chat_id uuid [not null]
+  device_id uuid [not null]
+
+  joined_at timestamptz [not null, default: `now()`]
+  removed_at timestamptz
+
+  is_active boolean [not null, default: true]
+
+  Note: 'Tracks which devices are currently allowed to receive chat encryption.'
+
+  Indexes {
+    (chat_id, device_id) [unique]
+  }
+}
+
+
+// ============================================================
+// 8. ENCRYPTED MESSAGES
+// ============================================================
+
+Table messages {
+  id uuid [pk, not null, default: `gen_random_uuid()`]
+
+  chat_id uuid [not null]
+
+  sender_device_id uuid [not null]
+
+  // IMPORTANT:
+  // No plaintext message column.
+  ciphertext text [not null]
+  nonce text [not null]
+
+  message_type varchar(30) [
+    not null,
+    note: 'text / image / video / voice / file / system'
+  ]
+
+  reply_to uuid
+
+  edited boolean [not null, default: false]
+  deleted boolean [not null, default: false]
+
+  created_at timestamptz [not null, default: `now()`]
+  edited_at timestamptz
+  deleted_at timestamptz
+
+  Indexes {
+    (chat_id, created_at)
+    sender_device_id
+  }
+
+  Note: 'Server stores ciphertext only. Plaintext exists only on client devices.'
+}
+
+
+// ============================================================
+// 9. MESSAGE KEY ENVELOPES
+// ============================================================
+
+Table message_key_envelopes {
+  id uuid [pk, not null, default: `gen_random_uuid()`]
+
+  message_id uuid [not null]
+  recipient_device_id uuid [not null]
+
+  encrypted_message_key text [not null]
+
+  key_version integer [not null, default: 1]
+
+  created_at timestamptz [not null, default: `now()`]
+
+  Note: 'Message key encrypted/wrapped for a specific recipient device.'
+
+  Indexes {
+    (message_id, recipient_device_id) [unique]
+  }
+}
+
+
+// ============================================================
+// 10. MESSAGE STATUS
+// ============================================================
+
+Table message_status {
+  message_id uuid [not null]
+  user_id uuid [not null]
+
+  status varchar(20) [
+    not null,
+    default: 'sent',
+    note: 'sent / delivered / read'
+  ]
+
+  updated_at timestamptz [not null, default: `now()`]
+
+  Indexes {
+    (message_id, user_id) [pk]
+  }
+}
+
+
+// ============================================================
+// 11. ATTACHMENTS
+// ============================================================
+
+Table attachments {
+  id uuid [pk, not null, default: `gen_random_uuid()`]
+
+  message_id uuid [not null]
+
+  encrypted_file_path text [not null]
+
+  file_name text
+  mime_type varchar(100)
+  file_size bigint
+
+  // Encryption metadata
+  file_nonce text
+  encryption_version integer [not null, default: 1]
+
+  created_at timestamptz [not null, default: `now()`]
+
+  Note: 'Files should be encrypted in browser before upload.'
+}
+
+
+// ============================================================
+// 12. REACTIONS
+// ============================================================
+
+Table reactions {
+  id uuid [pk, not null, default: `gen_random_uuid()`]
+
+  message_id uuid [not null]
+  user_id uuid [not null]
+
+  emoji varchar(20) [not null]
+
+  created_at timestamptz [not null, default: `now()`]
+
+  Indexes {
+    (message_id, user_id, emoji) [unique]
+  }
+}
+
+
+// ============================================================
+// 13. USER BLOCKS
+// ============================================================
+
+Table user_blocks {
+  id uuid [pk, not null, default: `gen_random_uuid()`]
+
+  blocker_id uuid [not null]
+  blocked_id uuid [not null]
+
+  created_at timestamptz [not null, default: `now()`]
+
+  Indexes {
+    (blocker_id, blocked_id) [unique]
+  }
+}
+
+
+// ============================================================
+// 14. ENCRYPTED RECOVERY BACKUPS
+// ============================================================
+
+Table recovery_backups {
+  id uuid [pk, not null, default: `gen_random_uuid()`]
+
+  user_id uuid [not null]
+
+  encrypted_backup text [not null]
+
+  backup_version integer [not null, default: 1]
+
+  created_at timestamptz [not null, default: `now()`]
+  updated_at timestamptz [not null, default: `now()`]
+
+  Note: '''
+  Backup contains encrypted key material.
+  Server cannot decrypt it.
+  Recovery password/key stays with the user.
+  '''
+}
+
+
+// ============================================================
+// 15. ENCRYPTED DEVICE SESSIONS
+// ============================================================
+
+Table device_sessions {
+  id uuid [pk, not null, default: `gen_random_uuid()`]
+
+  chat_id uuid [not null]
+
+  device_a_id uuid [not null]
+  device_b_id uuid [not null]
+
+  session_version integer [not null, default: 1]
+
+  encrypted_session_data text
+
+  created_at timestamptz [not null, default: `now()`]
+  updated_at timestamptz [not null, default: `now()`]
+  revoked_at timestamptz
+
+  Note: '''
+  Stores encrypted session metadata.
+  Actual private/session secrets remain on devices.
+  '''
+}
+
+
+// ============================================================
+// RELATIONSHIPS
+// ============================================================
+
+// ------------------------- USERS ------------------------------
+
+Ref: users.id - devices.user_id
+
+Ref: users.id - device_links.user_id
+
+Ref: users.id - chats.created_by
+
+Ref: users.id < chat_participants.user_id
+
+Ref: users.id < message_status.user_id
+
+Ref: users.id < reactions.user_id
+
+Ref: users.id < user_blocks.blocker_id
+
+Ref: users.id < user_blocks.blocked_id
+
+Ref: users.id < recovery_backups.user_id
+
+
+// ------------------------- DEVICES ----------------------------
+
+Ref: devices.id < device_keys.device_id
+
+Ref: devices.id < device_links.source_device_id
+
+Ref: devices.id < device_links.target_device_id
+
+Ref: devices.id < chat_devices.device_id
+
+Ref: devices.id < messages.sender_device_id
+
+Ref: devices.id < message_key_envelopes.recipient_device_id
+
+Ref: devices.id < device_sessions.device_a_id
+
+Ref: devices.id < device_sessions.device_b_id
+
+
+// ------------------------- CHATS ------------------------------
+
+Ref: chats.id < chat_participants.chat_id
+
+Ref: chats.id < chat_devices.chat_id
+
+Ref: chats.id < messages.chat_id
+
+Ref: chats.id < device_sessions.chat_id
+
+
+// ------------------------- MESSAGES ---------------------------
+
+Ref: messages.id < message_key_envelopes.message_id
+
+Ref: messages.id < message_status.message_id
+
+Ref: messages.id < attachments.message_id
+
+Ref: messages.id < reactions.message_id
+
+Ref: messages.id - messages.reply_to
